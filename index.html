@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="diddyhead.png" type="image/png">
+  <title>Diddy Clicker</title>
+  <style>
+    /* Import custom fonts */
+    @font-face {
+      font-family: 'HaloDek';
+      src: url('HaloDek.otf') format('opentype');
+    }
+
+    @font-face {
+      font-family: 'Diddys';
+      src: url('diddys.ttf') format('opentype');
+    }
+
+    @font-face {
+      font-family: 'Helvetica';
+      src: url('helvetica.ttf') format('opentype');
+    }
+
+    /* Style for "Diddy Clicker" */
+    h1 {
+      font-family: 'HaloDek', sans-serif;
+      font-size: 72px;
+      color: transparent;
+      background-image: linear-gradient(to right, purple, pink);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-stroke: 2px black;
+      text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+      margin: 0;
+    }
+
+    /* Style for "Diddy's:" */
+    #diddyCount {
+      font-family: 'Diddys', sans-serif;
+      font-size: 36px;
+      color: white;
+      -webkit-text-stroke: 2px black;
+      text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
+      margin: 0;
+    }
+
+    /* Style for stats and button */
+    #right-sidebar, .upgrade-item, #babyoilCost, #dildoCost, button {
+      font-family: 'Helvetica', sans-serif;
+      color: white;
+    }
+
+    /* Style for upgrades purchased */
+    #upgradesPurchased {
+      margin-top: 20px;
+      font-family: 'Helvetica', sans-serif;
+      color: white;
+      text-align: center;
+    }
+    .item-container {
+      display: flex;
+      align-items: center; /* Center the items vertically */
+    }
+
+    .item-container img {
+      width: 50px; /* Set width for images */
+      height: 50px; /* Set height for images */
+      margin-right: 10px; /* Add space between image and text */
+    }
+
+    /* Styles for upgrade items */
+    .upgrade-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Space between icon and the rest */
+      margin-bottom: 20px;           /* Space between items */
+      color: white;
+      font-size: 16px;
+    }
+
+    .upgrade-item img {
+      margin-right: 10px;            /* Space between image and text */
+      width: 50px;                   /* Fixed width for the image */
+      height: 50px;                  /* Fixed height for the image */
+    }
+
+    .upgrade-item button {
+      margin-left: 10px;             /* Space between DPS text and button */
+    }
+
+    .upgrade-item p {
+      margin: 0; /* Remove default margin */
+      font-size: 14px; /* Adjust font size */
+      color: white; /* Ensure text color is white */
+    }
+
+    .upgrade-item span {
+      flex-grow: 1;                  /* Allow the text to take up remaining space */
+      text-align: left;              /* Align text to the left */
+    }
+
+
+
+    button {
+      font-size: 14px; /* Adjust button text size */
+      padding: 5px 8px; /* Adjust button padding */
+      cursor: pointer;
+      background-color: black;
+      color: white;
+      border: 2px solid white; /* Add border for visibility */
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: white; /* Change background on hover */
+      color: black; /* Change text color on hover */
+    }
+
+    /* Background settings */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      background-image: url('background2.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Left sidebar for upgrades */
+    #sidebar {
+      width: 250px; /* Increased width for more space */
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Center and position main content */
+    #main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      text-align: center;
+      margin-left: 200px;
+      margin-right: 200px;
+    }
+
+    #header {
+      margin-top: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    #diddy-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    #clickImage {
+      cursor: pointer;
+      width: 650px;
+      height: auto;
+      margin-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Right sidebar for stats */
+    #right-sidebar {
+      width: 200px;
+      padding: 10px;
+      font-family: 'Helvetica', sans-serif;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #right-sidebar h3 {
+      font-size: 24px;
+      margin-bottom: 10px; /* Keep this as is for title spacing */
+    }
+
+    #right-sidebar p {
+      font-size: 14px;
+      line-height: 1; /* Change line-height for tighter spacing */
+      margin: 2px 0; /* Reduce margin to decrease vertical spacing */
+    }
+
+    /* Upgrade button at the bottom of the right sidebar */
+    #upgradeButton {
+      position: fixed;
+      bottom: 10px;
+      right: 230px;
+      padding: 10px 20px;
+      background-color: yellow; /* Changes the button color to yellow */
+      color: black; /* Adjusts text color for contrast */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 2;
+    }
+
+    /* Pop-up window styling */
+    #upgradePopup {
+      position: fixed;           /* Ensure the popup is positioned relative to the viewport */
+      top: 50%;                  /* Center vertically */
+      left: 50%;                 /* Center horizontally */
+      transform: translate(-50%, -50%); /* Adjust position to center */
+      max-width: 300px;         /* Set a max width for the popup */
+      padding: 20px;            /* Padding inside the popup */
+      background-color: rgba(0, 0, 0, 0.8); /* Background color */
+      border-radius: 10px;      /* Rounded corners */
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+      display: none;            /* Start hidden */
+      z-index: 999;             /* Ensure it's above other elements */
+
+    }
+
+
+    #upgradePopup h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    #upgradePopup .upgrade-item img {
+      cursor: pointer; /* Change cursor to pointer on hover */
+    }
+
+    #closePopup {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @keyframes diddyBounce {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1); /* Slightly increase size */
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Apply the bounce class to the image */
+    #clickImage.bounce {
+      animation: diddyBounce 0.2s ease; /* Adjust duration as needed */
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="upgrade-item">
+    <img id="babyoilImage" src="babyoil.png" alt="Babyoil Upgrade" />
+    <div>
+      <span>Babyoil:</span>
+      <span><span id="babyoilCost">10</span> Diddys</span>
+      <span>DPS: <span id="babyoilCurrentDPS">1</span></span>
+    </div>
+    <button id="buyBabyoil">Buy</button>
+  </div>
+
+  <div class="upgrade-item">
+    <img id="dildoImage" src="dildo.png" alt="Dildo Upgrade" />
+    <div>
+      <span>Dildo:</span>
+      <span><span id="dildoCost">100</span> Diddys</span>
+      <span>DPS: <span id="dildoCurrentDPS">5</span></span>
+    </div>
+    <button id="buyDildo">Buy</button>
+  </div>
+
+  <div class="upgrade-item">
+    <img id="childImage" src="child.png" alt="Child Upgrade" />
+    <div>
+      <span>Child:</span>
+      <span><span id="childCost">5000</span> Diddys</span>
+      <span>DPS: <span id="childCurrentDPS">20</span></span>
+    </div>
+    <button id="buyChild">Buy</button>
+  </div>
+
+  <div class="upgrade-item">
+    <div class="item-container">
+      <img id="slaveImage" src="slave.png" alt="Sexslave Upgrade" />
+      <p>Sexslave: <span id="slaveCost">10000</span> Diddys</p>
+      <p>DPS: <span id="slaveCurrentDPS">50</span></p>
+    </div>
+    <button id="buySlave">Buy</button>
+  </div>
+
+</div>
+
+
+
+
+<div id="main-content">
+  <div id="header">
+    <h1>Diddy Clicker</h1>
+    <p id="diddyCount">Diddy's: 0</p>
+  </div>
+
+  <div id="diddy-container">
+    <div id="image-container">
+      <div id="shadow"></div>
+      <img id="clickImage" src="diddy.png" alt="Click Me!" style="cursor: pointer;" /> <!-- Ensure cursor is pointer -->
+    </div>
+  </div>
+
+<div id="right-sidebar">
+  <h3>Stats</h3>
+  <p>Diddys per click: <span id="diddysPerClick">1</span></p>
+  <p>Diddys per second: <span id="diddysPerSecond">0</span></p>
+
+  <h4>Items</h4>
+  <p>Babyoil Count: <span id="babyoilCount">0</span></p>
+  <p>Babyoil DPS: <span id="babyoilDPSDisplay">1</span></p> <!-- Display Babyoil DPS -->
+  <p>Babyoil Mined: <span id="babyoilMined">0</span> </p> <!-- Track Diddys mined by Babyoil -->
+  <br></br>
+
+  <p>Dildo Count: <span id="dildoCount">0</span></p>
+  <p>Dildo DPS: <span id="dildoDPSDisplay">5</span></p> <!-- Display Dildo DPS -->
+  <p>Dildo Mined: <span id="dildoMined">0</span> </p> <!-- Track Diddys mined by Dildo -->
+  <br></br>
+
+
+  <p>Child Count: <span id="childCount">0</span></p>
+  <p>Child DPS: <span id="childDPSDisplay">20</span></p> <!-- Display Child DPS -->
+  <p>Child Mined: <span id="childMined">0</span> </p> <!-- Track Diddys mined by Child -->
+  <br></br>
+
+
+  <h4>Totals</h4>
+  <p>Total Clicks: <span id="clickCount">0</span></p>
+  <p id="totalDiddysClicked">Total Diddys Clicked: 0</p>
+  <p id="totalDiddysMined">All Time Diddys: 0</p> <!-- Renamed to All Time Diddys -->
+
+  <div id="upgradesPurchased"></div> <!-- Section for purchased upgrades -->
+</div>
+
+
+<!-- Upgrade Button -->
+  <button id="upgradeButton">Upgrade</button>
+
+  <!-- Pop-up window for upgrades -->
+  <div id="upgradePopup" style="display: none;">
+    <h2>Upgrade Options</h2>
+    <div class="upgrade-item">
+      <img id="woodenCursorImage" src="woodencursor.png" alt="Wooden Cursor Upgrade" title="Doubles Diddys per click!" style="width: 50px; height: 50px;"/>
+      <span>Doubles Diddys per click!</span>
+      <span><span id="woodenCursorCost">2000</span> Diddys</span>
+    </div>
+    <div class="upgrade-item">
+      <img id="babyoilUpgradeImage" src="babyoil.png" alt="Babyoil Upgrade" title="Doubles Diddys per second!" style="width: 50px; height: 50px;"/>
+      <span>Doubles Diddys per second!</span>
+      <span><span id="babyoilUpgradeCost">7500</span> Diddys</span>
+    </div>
+    <button id="closePopup">Close</button>
+  </div>
+
+
+
+  <script src="main.js"></script>
+</body>
+</html>
